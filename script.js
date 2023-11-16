@@ -34,10 +34,15 @@ class UI {
         setTimeout(() => {
             document.querySelector('.alert').remove();
            
-        }, 2500);
-
-       
+        }, 2500);       
     }
+
+    deleteBook(cible) { // cible c'est un élément de la ligne qui a été cliqué
+        if(cible.className == 'delete') {
+            cible.parentElement.parentElement.remove();
+        }
+    }
+
     eraseInputs() {
         document.getElementById("title").value = '';
         document.getElementById("author").value = '';
@@ -72,9 +77,9 @@ class Store {
         localStorage.setItem('access_books', JSON.stringify(books));
     }
     
-    static removeBook(book) {
+    static removeBook(bookId) {
         const books = Store.getBooks();
-        let i = books.indexOf(book);
+        let i = books.findIndex((b) => b.isbn == bookId)
         books.splice(i, 1)
         localStorage.setItem('access_books', JSON.stringify(books));
     }
@@ -94,5 +99,23 @@ document.getElementById("book-form").addEventListener("submit", (e) => {
     Store.addBook(newBook);
     ui.showAlert('Livre ajouté !', 'alert-success');
     ui.eraseInputs();
+})
+
+document.getElementById('book-list').addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log(e);
+    const ui = new UI();
+
+    if(e.target.className == 'delete') {
+        ui.deleteBook(e.target);
+        Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
+        ui.showAlert('Livre supprimé', 'alert-danger')
+    }
+    else {
+        
+        ui.showAlert('Cliquez sur le X', 'alert-info')
+    }
+
+
 })
 
