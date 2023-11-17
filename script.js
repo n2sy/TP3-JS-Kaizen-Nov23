@@ -1,3 +1,4 @@
+
 class Book {
     title;
     author;
@@ -9,6 +10,15 @@ class Book {
         this.isbn = isbn;
     }
 }
+
+// function Book(title, author, isbn) {
+//         this.title = title;
+//         this.author = author;
+//         this.isbn = isbn;
+// }
+
+// let livre1 = new Book("aaaaaa", "qqqqqqq", "1111111");
+// console.log(livre1);
 
 //Classe manipulant l'interface web (HTML)
 class UI {
@@ -80,7 +90,7 @@ class Store {
     static removeBook(bookId) {
         const books = Store.getBooks();
         let i = books.findIndex((b) => b.isbn == bookId)
-        books.splice(i, 1)
+        books.splice(i, 1);
         localStorage.setItem('access_books', JSON.stringify(books));
     }
 }
@@ -93,12 +103,20 @@ document.getElementById("book-form").addEventListener("submit", (e) => {
     const author = document.getElementById("author").value;
     const isbn = document.getElementById("isbn").value;
 
-    const newBook = new Book(title, author, isbn);
     const ui = new UI();
-    ui.addBookToList(newBook);
-    Store.addBook(newBook);
-    ui.showAlert('Livre ajouté !', 'alert-success');
-    ui.eraseInputs();
+    
+    if(title == '' || author == '' || isbn == '') {
+        ui.showAlert("Veuillez saisir tous les champs", 'alert-warning');
+    }
+    else {
+        const newBook = new Book(title, author, isbn);
+        ui.addBookToList(newBook);
+        Store.addBook(newBook);
+        ui.showAlert('Livre ajouté !', 'alert-success');
+        ui.eraseInputs();
+    }
+    
+
 })
 
 document.getElementById('book-list').addEventListener('click', (e) => {
